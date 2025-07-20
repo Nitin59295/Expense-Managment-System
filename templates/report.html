@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<h2><i class="fas fa-file-invoice-dollar"></i> Reports</h2>
+
+<div class="card">
+    <h3>By Project</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Project Name</th>
+                <th>Total Expenses</th>
+                <th>Total Revenues</th>
+                <th>Profit / Loss</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in project_reports %}
+            <tr>
+                <td>{{ report.name }}</td>
+                <td>₹{{ report.total_expenses | round(2) }}</td>
+                <td>₹{{ report.total_revenues | round(2) }}</td>
+                {# Calculate Profit/Loss #}
+                {% set profit = report.total_revenues - report.total_expenses %}
+                {# FIX: Use a class to apply color instead of an inline style #}
+                <td class="{% if profit >= 0 %}profit{% else %}loss{% endif %}">
+                    ₹{{ profit | round(2) }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>By Seller</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Seller Name</th>
+                <th>GSTN</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for seller in sellers %}
+            <tr>
+                <td>{{ seller.name }}</td>
+                <td>{{ seller.gstn }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>By Item Name</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Item Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

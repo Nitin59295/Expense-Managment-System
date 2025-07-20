@@ -1,0 +1,357 @@
+/* --- Design System: CSS Variables --- */
+:root {
+    --primary-color: #2c3e50; /* Deep Navy Blue */
+    --secondary-color: #34495e; /* Lighter Navy */
+    --accent-color: #3498db; /* Bright Blue */
+    --background-color: #ecf0f1; /* Light Grey */
+    --text-color: #333;
+    --card-bg-color: #ffffff;
+    --border-color: #dddddd;
+    --success-bg: #d4edda;
+    --success-text: #155724;
+    --danger-bg: #f8d7da;
+    --danger-text: #721c24;
+    --info-bg: #d1ecf1;
+    --info-text: #0c5460;
+    --font-family: 'Poppins', sans-serif;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+}
+
+/* --- General Reset & Body --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* --- Layout --- */
+.grid-container {
+    display: grid;
+    grid-template-columns: 240px 1fr; /* Sidebar/Nav and Main Content */
+    grid-template-rows: 1fr;
+    min-height: 100vh;
+}
+
+.main-content {
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+/* --- Navigation Bar --- */
+.navbar {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.nav-brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.nav-brand i {
+    margin-right: 10px;
+    color: var(--accent-color);
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.nav-links a {
+    color: #bdc3c7;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 0.5rem;
+    transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.nav-links a i {
+    margin-right: 12px;
+    width: 20px; /* Align icons */
+}
+
+.nav-links a:hover, .nav-links a.active {
+    background-color: var(--secondary-color);
+    color: #ffffff;
+}
+
+/* --- Card / Panel Styling --- */
+.card {
+    background-color: var(--card-bg-color);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 2rem;
+}
+
+/* --- Typography --- */
+h2, h3 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+
+/* --- Form Styling --- */
+.styled-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: var(--font-family);
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+/* --- Button Styling --- */
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-family: var(--font-family);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.form-group .btn {
+    margin-top: auto; /* Align button to bottom in grid */
+}
+
+/* --- Table Styling --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 1rem;
+    background-color: var(--card-bg-color);
+    box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius);
+    overflow: hidden; /* Ensures border-radius is respected by children */
+}
+
+th, td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background-color: #f1f5f8;
+}
+
+/* --- Toast Notification Styling --- */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    min-width: 300px;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast.toast-success {
+    background-color: #27ae60;
+}
+
+.toast.toast-danger {
+    background-color: #c0392b;
+}
+
+.toast.toast-info {
+    background-color: #2980b9;
+}
+
+.toast.toast-warning {
+    background-color: #f39c12;
+}
+
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+    .navbar {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1rem;
+    }
+    .nav-links {
+        display: none; /* Hide for simplicity on mobile */
+    }
+    .main-content {
+        padding: 1rem;
+    }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.2rem; }
+}
+
+/* --- Additional Component Styles --- */
+
+/* For forms with a submit button spanning the full width */
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Secondary button style */
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: #ffffff;
+}
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+}
+
+/* Action buttons in tables */
+.btn-action {
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: opacity 0.3s;
+}
+.btn-action:hover {
+    opacity: 0.8;
+}
+
+.btn-action.edit {
+    background-color: #2980b9; /* Blue */
+}
+
+.btn-action.delete {
+    background-color: #c0392b; /* Red */
+}
+
+/* Quick action buttons on dashboard */
+.quick-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* --- Summary Grid Styles --- */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    text-align: center;
+}
+
+.summary-item h4 {
+    font-weight: 500;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+.summary-item p {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.summary-item p.revenue, .summary-item p.profit {
+    color: #27ae60; /* Green */
+}
+
+.summary-item p.expense, .summary-item p.loss {
+    color: #c0392b; /* Red */
+}
+
+/* Profit / Loss colors for tables */
+td.profit {
+    color: #27ae60; /* Green */
+    font-weight: 600;
+}
+
+td.loss {
+    color: #c0392b; /* Red */
+    font-weight: 600;
+}

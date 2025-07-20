@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Expense Forecast{% endblock %}
+
+{% block content %}
+<h2><i class="fas fa-chart-pie"></i> Expense Forecast</h2>
+
+<div class="card">
+    <h3>Forecast for Next 7 Days</h3>
+    <canvas id="forecastChart" width="400" height="200"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // FIX: Pass the Jinja2 data as a string and then parse it with JSON.
+        // This makes the template compatible with JavaScript linters.
+        const forecastDataJSON = '{{ forecast | tojson | safe }}';
+        const forecastData = JSON.parse(forecastDataJSON);
+
+        // Extract labels (dates) and data points (amounts)
+        const labels = Object.keys(forecastData);
+        const data = Object.values(forecastData);
+
+        const ctx = document.getElementById('forecastChart').getContext('2d');
+        
+        // Use colors from our CSS variables for a consistent look
+        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+        const accentColorTransparent = accentColor + '33'; // Add transparency for the background fill
+
+        const forecastChart = new Chart(ctx, {
+            type: 'line', // A line chart is better for time-series data
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Expenses Forecast (₹)',
+                    data: data,
+                    backgroundColor: accentColorTransparent,
+                    borderColor: accentColor,
+                    borderWidth: 2,
+                    pointBackgroundColor: accentColor,
+                    tension: 0.1 // Makes the line slightly curved
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            // Format the y-axis labels as currency
+                            callback: function(value, index, values) {
+                                return '₹' + value.toLocaleString('en-IN');
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        // Format the tooltip that appears on hover
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += '₹' + context.parsed.y.toLocaleString('en-IN');
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

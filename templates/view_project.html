@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Project Details{% endblock %}
+{% block content %}
+<h2><i class="fas fa-folder-open"></i> Project: {{ project.name }}</h2>
+
+<div class="card">
+    <h3>Financial Summary</h3>
+    <div class="summary-grid">
+        <div class="summary-item">
+            <h4>Total Revenues</h4>
+            <p class="revenue">₹{{ total_revenues | round(2) }}</p>
+        </div>
+        <div class="summary-item">
+            <h4>Total Expenses</h4>
+            <p class="expense">₹{{ total_expenses | round(2) }}</p>
+        </div>
+        <div class="summary-item">
+            <h4>Profit / Loss</h4>
+            {% set profit = total_revenues - total_expenses %}
+            <p class="{% if profit >= 0 %}profit{% else %}loss{% endif %}">
+                ₹{{ profit | round(2) }}
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Expenses for this Project</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Expense Type</th>
+                <th>Total Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense.item_name }}</td>
+                <td>{{ expense.expense_type }}</td>
+                <td>₹{{ expense.total_amount | round(2) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Revenues for this Project</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Total Revenue</th>
+                <th>Logged By</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for revenue in revenues %}
+            <tr>
+                <td>₹{{ revenue.total_estimated_revenue | round(2) }}</td>
+                <td>{{ revenue.employee.name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
