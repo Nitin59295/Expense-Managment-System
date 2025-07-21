@@ -62,11 +62,8 @@ def index():
 @login_required
 def log_expenses():
     form = ExpenseForm()
-    # FIX: The project dropdown should only show projects created by the current user.
     form.project_id.choices = [(p.id, p.name) for p in Project.query.filter_by(user_id=current_user.id).all()]
-    
     if form.validate_on_submit():
-        # ... (rest of the logic is correct)
         try:
             seller = Seller.query.filter_by(gstn=form.gstn.data.strip()).first()
             if not seller:
@@ -93,7 +90,6 @@ def log_expenses():
         except Exception as e:
             db.session.rollback()
             flash(f"An error occurred: {str(e)}", 'danger')
-      
     expenses = Expense.query.filter_by(user_id=current_user.id).order_by(Expense.created_at.desc()).all()
     return render_template('expenses.html', form=form, expenses=expenses)
     
@@ -101,7 +97,6 @@ def log_expenses():
 @login_required
 def log_revenue():
     form = RevenueForm()
-    # FIX: The project dropdown should also be filtered here.
     form.project_id.choices = [(p.id, p.name) for p in Project.query.filter_by(user_id=current_user.id).all()]
     if form.validate_on_submit():
         project = Project.query.get(form.project_id.data)
@@ -122,22 +117,17 @@ def log_revenue():
 def manage_projects():
     form = ProjectForm()
     if form.validate_on_submit():
-        # FIX: When creating a new project, assign it to the current user.
         project = Project(name=form.name.data, user=current_user)
         db.session.add(project)
         db.session.commit()
         flash('Project added successfully!', 'success')
         return redirect(url_for('routes.manage_projects'))
-
-    # FIX: Only show the projects created by the logged-in user.
     projects = Project.query.filter_by(user_id=current_user.id).all()
     return render_template('projects.html', form=form, projects=projects)
 
-# ... (The rest of the routes are already correctly filtered by user_id)
 @routes.route('/projects/<int:id>')
 @login_required
 def view_project(id):
-    # This query ensures a user can only view their own projects
     project = Project.query.filter_by(id=id, user_id=current_user.id).first_or_404()
     expenses = Expense.query.filter_by(project_id=id, user_id=current_user.id).all()
     revenues = Revenue.query.filter_by(project_id=id, user_id=current_user.id).all()
@@ -154,12 +144,7 @@ def report():
         Project.name,
         func.sum(Expense.total_amount).label('total_expenses'),
         func.sum(Revenue.total_estimated_revenue).label('total_revenues')
-    ).select_from(Project)\
-    .filter(Project.user_id == current_user.id) \
-    .outerjoin(Expense, (Project.id == Expense.project_id))\
-    .outerjoin(Revenue, (Project.id == Revenue.project_id))\
-    .group_by(Project.name)\
-    .all()
+    ).select_from(Project).filter(Project.user_id == current_user.id).outerjoin(Expense, (Project.id == Expense.project_id)).outerjoin(Revenue, (Project.id == Revenue.project_id)).group_by(Project.name).all()
     project_reports = [
         {'name': name, 'total_expenses': expenses or 0, 'total_revenues': revenues or 0}
         for name, expenses, revenues in project_reports_query
@@ -173,12 +158,15 @@ def report():
 @login_required
 def forecast():
     expenses_over_time = Expense.query.filter_by(user_id=current_user.id).order_by(Expense.created_at).all()
+    
     if len(expenses_over_time) < 10:
         flash("Not enough expense data for a reliable forecast.", "warning")
         return redirect(url_for('routes.index'))
+
     data = {exp.created_at: float(exp.total_amount) for exp in expenses_over_time}
     series = pd.Series(data)
     daily_series = series.resample('D').sum()
+
     if len(daily_series[daily_series > 0]) < 5:
         flash("Generating a demo forecast with sample historical data.", "info")
         today = datetime.now()
@@ -189,16 +177,28 @@ def forecast():
         if todays_total > 0:
             fake_data[today] = todays_total
         daily_series = pd.Series(fake_data)
-    log_transformed_series = np.log(daily_series[daily_series > 0])
+    
+    daily_series_cleaned = daily_series[daily_series > 0]
+    log_transformed_series = np.log(daily_series_cleaned)
+
     try:
         model = ARIMA(log_transformed_series, order=(1, 1, 1))
         model_fit = model.fit()
-        forecast_result = model_fit.forecast(steps=7)
-        inverse_transformed_forecast = np.exp(forecast_result)
+
+        # FIX: Get the raw forecast values and generate dates manually for reliability.
+        forecast_values = model_fit.forecast(steps=7).values
+        inverse_transformed_values = np.exp(forecast_values)
+
+        # Get the last date from our data to start the forecast from the next day.
+        last_date = log_transformed_series.index[-1]
+        forecast_dates = pd.date_range(start=last_date + timedelta(days=1), periods=7)
+
+        # Combine the generated dates and the forecast values.
         formatted_forecast = {
             date.strftime('%Y-%m-%d'): round(value, 2)
-            for date, value in inverse_transformed_forecast.items()
+            for date, value in zip(forecast_dates, inverse_transformed_values)
         }
+
         return render_template('forecast.html', forecast=formatted_forecast)
     except Exception as e:
         flash(f"Could not generate forecast: {e}", "danger")
