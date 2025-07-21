@@ -81,14 +81,15 @@ This app is deployed on **Render** with CI/CD enabled. New code pushes to `main`
 🖼️ Screenshots
 ---------------
 - **Dashboard**
-  ![Dashboard](./ss/Dashboard.png)
+  ![Dashboard](screenshots/Dashboard.png)
 - **Expense Logging Page**
-  ![Expense](./ss/Expense.png)
+  ![Expense](screenshots/Expense.png)
 - **Forecasting**
-  ![Forecasting](./ss/Forecasting.png)
+  ![Forecasting](screenshots/Forecasting.png)
 - **Reporting Page**
-  ![Report](./ss/Report.png)
+  ![Report](screenshots/Report.png)
 
+  
 📈 Future Improvements
 -----------------------
 - [ ] Receipt Uploads (image or PDF)
