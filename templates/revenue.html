@@ -15,10 +15,9 @@
             {{ form.total_estimated_revenue.label }}
             {{ form.total_estimated_revenue(class="form-control") }}
         </div>
-        <div class="form-group">
-            {{ form.employee_id.label }}
-            {{ form.employee_id(class="form-control") }}
-        </div>
+        
+        {# FIX: The employee_id field was removed from here #}
+
         <div class="form-group full-width">
             {{ form.submit(class="btn btn-primary") }}
         </div>
@@ -26,13 +25,12 @@
 </div>
 
 <div class="card">
-    <h3>Logged Revenues</h3>
+    <h3>My Logged Revenues</h3>
     <table>
         <thead>
             <tr>
                 <th>Project Name</th>
                 <th>Total Estimated Revenue</th>
-                <th>Logged By</th>
             </tr>
         </thead>
         <tbody>
@@ -40,7 +38,6 @@
             <tr>
                 <td>{{ revenue.project.name }}</td>
                 <td>₹{{ revenue.total_estimated_revenue | round(2) }}</td>
-                <td>{{ revenue.employee.name }}</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -3,22 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" xintegrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <!-- Your Stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    
     <title>{% block title %}Expense Management{% endblock %}</title>
 </head>
 <body>
-    <!-- Container for Pop-up Toasts -->
     <div id="toast-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -30,47 +22,43 @@
     </div>
 
     <div class="grid-container">
-        <!-- Navigation Bar -->
         <nav class="navbar">
             <div class="nav-brand">
                 <i class="fas fa-wallet"></i>
                 <span>ExpensePro</span>
             </div>
+            <!-- This section only shows if a user is logged in -->
+            {% if current_user.is_authenticated %}
             <div class="nav-links">
-                <a href="{{ url_for('routes.index') }}"><i class="fas fa-home"></i> Home</a>
-                <a href="{{ url_for('routes.manage_employees') }}"><i class="fas fa-users"></i> Employees</a>
+                <a href="{{ url_for('routes.index') }}"><i class="fas fa-home"></i> Dashboard</a>
                 <a href="{{ url_for('routes.manage_projects') }}"><i class="fas fa-briefcase"></i> Projects</a>
                 <a href="{{ url_for('routes.log_expenses') }}"><i class="fas fa-money-bill-wave"></i> Expenses</a>
                 <a href="{{ url_for('routes.log_revenue') }}"><i class="fas fa-chart-line"></i> Revenue</a>
                 <a href="{{ url_for('routes.report') }}"><i class="fas fa-file-alt"></i> Report</a>
                 <a href="{{ url_for('routes.forecast') }}"><i class="fas fa-chart-pie"></i> Forecast</a>
             </div>
+            <div class="nav-footer">
+                <p>Welcome, {{ current_user.username }}!</p>
+                <a href="{{ url_for('routes.logout') }}" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+            {% endif %}
         </nav>
 
-        <!-- Main Content -->
         <main class="main-content">
             {% block content %}{% endblock %}
         </main>
     </div>
 
-    <!-- JavaScript for Toast Notifications -->
     <script>
+        // Toast notification script remains the same
         document.addEventListener('DOMContentLoaded', (event) => {
             const toasts = document.querySelectorAll('#toast-container .toast');
             toasts.forEach((toast, index) => {
-                setTimeout(() => {
-                    toast.classList.add('show');
-                }, 100 * index);
-
+                setTimeout(() => { toast.classList.add('show'); }, 100 * index);
                 setTimeout(() => {
                     toast.classList.remove('show');
-                    // Optional: remove the element after the animation
-                    setTimeout(() => {
-                        if (toast.parentNode) {
-                            toast.parentNode.removeChild(toast);
-                        }
-                    }, 500);
-                }, 5000 + (100 * index)); // Each toast lasts 5 seconds
+                    setTimeout(() => { if (toast.parentNode) { toast.parentNode.removeChild(toast); } }, 500);
+                }, 5000 + (100 * index));
             });
         });
     </script>
