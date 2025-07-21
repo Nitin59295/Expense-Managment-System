@@ -4,49 +4,73 @@
 <h2><i class="fas fa-money-bill-wave"></i> Log an Expense</h2>
 
 <div class="card">
-    <form method="POST" class="styled-form">
+    <form method="POST" class="styled-form" novalidate>
         {{ form.hidden_tag() }}
         
         <div class="form-group">
             {{ form.expense_type.label }}
             {{ form.expense_type(class="form-control") }}
+            {% for error in form.expense_type.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.item_name.label }}
             {{ form.item_name(class="form-control") }}
+            {% for error in form.item_name.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.quantity.label }}
             {{ form.quantity(class="form-control") }}
+            {% for error in form.quantity.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.unit_price.label }}
             {{ form.unit_price(class="form-control") }}
+            {% for error in form.unit_price.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.gst_amount.label }}
             {{ form.gst_amount(class="form-control") }}
+            {% for error in form.gst_amount.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.invoice_number.label }}
             {{ form.invoice_number(class="form-control") }}
+            {% for error in form.invoice_number.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.seller_name.label }}
             {{ form.seller_name(class="form-control") }}
+            {% for error in form.seller_name.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.gstn.label }}
             {{ form.gstn(class="form-control") }}
+            {% for error in form.gstn.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.project_id.label }}
             {{ form.project_id(class="form-control") }}
+            {% for error in form.project_id.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
         </div>
-        <div class="form-group">
-            {{ form.employee_id.label }}
-            {{ form.employee_id(class="form-control") }}
-        </div>
+        
         <div class="form-group full-width">
             {{ form.submit(class="btn btn-primary") }}
         </div>
@@ -54,13 +78,12 @@
 </div>
     
 <div class="card">
-    <h3>Recently Logged Expenses</h3>
+    <h3>My Logged Expenses</h3>
     <table>
         <thead>
             <tr>
                 <th>Item Name</th>
                 <th>Project</th>
-                <th>Employee</th>
                 <th>Total Amount</th>
             </tr>
         </thead>
@@ -69,7 +92,6 @@
             <tr>
                 <td>{{ expense.item_name }}</td>
                 <td>{{ expense.project.name }}</td>
-                <td>{{ expense.employee.name }}</td>
                 <td>₹{{ expense.total_amount | round(2) }}</td>
             </tr>
             {% endfor %}
