@@ -1,4 +1,3 @@
-
 ExpensePro: Full-Stack Expense Management System
 ================================================
 
@@ -81,10 +80,14 @@ This app is deployed on **Render** with CI/CD enabled. New code pushes to `main`
 
 🖼️ Screenshots
 ---------------
-(Add your screenshots here)
-- Dashboard / Home Page
-- Expense Logging Page
-- Reporting Page
+- **Dashboard**
+  ![Dashboard](./ss/Dashboard.png)
+- **Expense Logging Page**
+  ![Expense](./ss/Expense.png)
+- **Forecasting**
+  ![Forecasting](./ss/Forecasting.png)
+- **Reporting Page**
+  ![Report](./ss/Report.png)
 
 📈 Future Improvements
 -----------------------
